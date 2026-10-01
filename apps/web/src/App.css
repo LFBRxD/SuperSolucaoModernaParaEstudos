@@ -1,0 +1,78 @@
+:root {
+  --bg: #0f1c17;
+  --bg-2: #173028;
+  --panel: #1d3b31;
+  --text: #e7f2ec;
+  --muted: #9bb5a8;
+  --accent: #3dcf8e;
+  --accent-2: #f0b429;
+  --danger: #ff6b6b;
+  --ok: #3dcf8e;
+  --border: rgba(231, 242, 236, 0.12);
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 10% 10%, #245043 0%, transparent 40%),
+    radial-gradient(circle at 90% 0%, #2a4d3d 0%, transparent 35%),
+    linear-gradient(160deg, var(--bg), #0b1411 60%, #122019);
+  min-height: 100%;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a.active { color: var(--accent-2); }
+
+.app-shell { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+.topbar {
+  display: flex; justify-content: space-between; gap: 1rem; align-items: center;
+  padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 16px;
+  background: color-mix(in srgb, var(--panel) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+.brand { display: flex; gap: 0.85rem; align-items: center; }
+.brand p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent), #1f8f5f); color: #042116; font-weight: 700;
+}
+.nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+.content { margin-top: 1.5rem; }
+.page-head h1 { margin: 0 0 0.35rem; font-size: 1.8rem; }
+.page-head p { margin: 0 0 1rem; color: var(--muted); }
+
+.grid.products {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
+}
+.product-card, .cart, .detail-card {
+  background: color-mix(in srgb, var(--panel) 88%, black);
+  border: 1px solid var(--border); border-radius: 14px; padding: 1rem;
+}
+.product-card h2 { margin-top: 0; font-size: 1.1rem; }
+.meta { display: flex; justify-content: space-between; color: var(--muted); margin: 0.75rem 0; font-size: 0.9rem; }
+.cart { margin-top: 1.25rem; display: grid; gap: 0.75rem; }
+label { display: grid; gap: 0.35rem; color: var(--muted); font-size: 0.9rem; }
+label.checkbox { display: flex; align-items: center; gap: 0.5rem; }
+input, select, button {
+  font: inherit; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg-2); color: var(--text); padding: 0.55rem 0.75rem;
+}
+button {
+  background: linear-gradient(135deg, #2bbf7a, #1f8f5f); color: #042116;
+  border: none; font-weight: 600; cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.table th, .table td { text-align: left; padding: 0.7rem; border-bottom: 1px solid var(--border); }
+.toolbar { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.alert { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; }
+.alert.error { background: color-mix(in srgb, var(--danger) 20%, transparent); }
+.alert.ok { background: color-mix(in srgb, var(--ok) 20%, transparent); }
+.status-pill {
+  display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 25%, transparent); font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .topbar { flex-direction: column; align-items: flex-start; }
+}

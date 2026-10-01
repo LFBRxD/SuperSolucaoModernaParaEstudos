@@ -1,0 +1,156 @@
+# StudyShop umbrella — defaults educacionais (não produção)
+# DNS interno: <fullnameOverride>.<namespace>.svc.cluster.local
+
+mongodb:
+  enabled: true
+  fullnameOverride: mongodb
+  image:
+    repository: mongo
+    tag: "7"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 27017
+  persistence:
+    enabled: false
+
+kafka:
+  enabled: true
+  fullnameOverride: kafka
+  image:
+    repository: bitnami/kafka
+    tag: "3.9"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 9092
+  env:
+    KAFKA_CFG_NODE_ID: "0"
+    KAFKA_CFG_PROCESS_ROLES: "controller,broker"
+    KAFKA_CFG_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
+    KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+    KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "0@kafka:9093"
+    KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+    KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+    KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ALLOW_PLAINTEXT_LISTENER: "yes"
+
+orders-service:
+  enabled: true
+  fullnameOverride: orders-service
+  replicaCount: 1
+  image:
+    repository: studyshop/orders-service
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    httpPort: 8081
+    grpcPort: 9081
+  env:
+    MONGODB_URI: "mongodb://mongodb:27017/orders"
+    KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    OTEL_SERVICE_NAME: "orders-service"
+    OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+
+inventory-service:
+  enabled: true
+  fullnameOverride: inventory-service
+  replicaCount: 1
+  image:
+    repository: studyshop/inventory-service
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    httpPort: 8082
+    grpcPort: 9082
+  env:
+    MONGODB_URI: "mongodb://mongodb:27017/inventory"
+    KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    OTEL_SERVICE_NAME: "inventory-service"
+    OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+
+payments-service:
+  enabled: true
+  fullnameOverride: payments-service
+  replicaCount: 1
+  image:
+    repository: studyshop/payments-service
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    httpPort: 8083
+  env:
+    MONGODB_URI: "mongodb://mongodb:27017/payments"
+    KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    OTEL_SERVICE_NAME: "payments-service"
+    OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+
+notifications-service:
+  enabled: true
+  fullnameOverride: notifications-service
+  replicaCount: 1
+  image:
+    repository: studyshop/notifications-service
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    httpPort: 8084
+  env:
+    MONGODB_URI: "mongodb://mongodb:27017/notifications"
+    KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    OTEL_SERVICE_NAME: "notifications-service"
+    OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+
+api-gateway:
+  enabled: true
+  fullnameOverride: api-gateway
+  replicaCount: 1
+  image:
+    repository: studyshop/api-gateway
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    httpPort: 8080
+  env:
+    ORDERS_GRPC_ADDRESS: "static://orders-service:9081"
+    INVENTORY_GRPC_ADDRESS: "static://inventory-service:9082"
+    NOTIFICATIONS_BASE_URL: "http://notifications-service:8084"
+    ORDERS_HEALTH_URL: "http://orders-service:8081/actuator/health"
+    INVENTORY_HEALTH_URL: "http://inventory-service:8082/actuator/health"
+    PAYMENTS_HEALTH_URL: "http://payments-service:8083/actuator/health"
+    NOTIFICATIONS_HEALTH_URL: "http://notifications-service:8084/actuator/health"
+    OTEL_SERVICE_NAME: "api-gateway"
+    OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+
+web:
+  enabled: true
+  fullnameOverride: web
+  replicaCount: 1
+  image:
+    repository: studyshop/web
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30080

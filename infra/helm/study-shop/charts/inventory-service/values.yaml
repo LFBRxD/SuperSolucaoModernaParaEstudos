@@ -1,0 +1,19 @@
+﻿fullnameOverride: inventory-service
+replicaCount: 1
+image:
+  repository: studyshop/inventory-service
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  httpPort: 8082
+  grpcPort: 9082
+env:
+  MONGODB_URI: "mongodb://mongodb:27017/inventory"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+  OTEL_SERVICE_NAME: "inventory-service"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+  OTEL_METRICS_EXPORTER: "none"
+  OTEL_LOGS_EXPORTER: "none"
+resources: {}

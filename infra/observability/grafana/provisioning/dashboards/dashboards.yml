@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: StudyShop
+    orgId: 1
+    folder: StudyShop
+    type: file
+    disableDeletion: false
+    options:
+      path: /etc/grafana/provisioning/dashboards/json

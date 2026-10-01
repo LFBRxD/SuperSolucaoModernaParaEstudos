@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+grpc:
+  client:
+    orders-service:
+      address: ${ORDERS_GRPC_ADDRESS:static://localhost:9081}
+      negotiationType: plaintext
+    inventory-service:
+      address: ${INVENTORY_GRPC_ADDRESS:static://localhost:9082}
+      negotiationType: plaintext
+
+studyshop:
+  notifications-base-url: ${NOTIFICATIONS_BASE_URL:http://localhost:8084}
+  health:
+    orders-url: ${ORDERS_HEALTH_URL:http://localhost:8081/actuator/health}
+    inventory-url: ${INVENTORY_HEALTH_URL:http://localhost:8082/actuator/health}
+    payments-url: ${PAYMENTS_HEALTH_URL:http://localhost:8083/actuator/health}
+    notifications-url: ${NOTIFICATIONS_HEALTH_URL:http://localhost:8084/actuator/health}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.studyshop: INFO

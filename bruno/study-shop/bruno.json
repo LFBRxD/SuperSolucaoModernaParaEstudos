@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "study-shop",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

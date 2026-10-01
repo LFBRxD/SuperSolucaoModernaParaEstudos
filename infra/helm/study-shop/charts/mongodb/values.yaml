@@ -1,0 +1,11 @@
+fullnameOverride: mongodb
+image:
+  repository: mongo
+  tag: "7"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 27017
+persistence:
+  enabled: false
+resources: {}
