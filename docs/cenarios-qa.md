@@ -1,6 +1,6 @@
 # Cenários de QA — StudyShop
 
-Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:8080`. Web: `http://localhost:3000`.
+Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:10001`. Web: `http://localhost:10000`.
 
 ## Pré-condição
 
@@ -14,7 +14,7 @@ Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:8080`.
 
 **Objetivo:** garantir que todos os backends respondem.
 
-1. Abrir `/health` na web ou `GET http://localhost:8080/api/health`.
+1. Abrir `/health` na web ou `GET http://localhost:10001/api/health`.
 2. Verificar status geral `UP` e cada serviço `UP`.
 
 **Esperado:** `api-gateway`, `orders-service`, `inventory-service`, `payments-service`, `notifications-service`, `inventory-grpc` = UP.

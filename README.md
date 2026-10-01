@@ -47,15 +47,24 @@ Equivale a `docker compose up -d --build` em `infra/`.
 
 ### URLs
 
-| Serviço | URL |
-|---------|-----|
-| Web | http://localhost:3000 |
-| API Gateway | http://localhost:8080 |
-| Health | http://localhost:8080/api/health |
-| Swagger UI | http://localhost:8080/swagger-ui.html |
-| Grafana | http://localhost:3001 (`admin` / `admin`) |
-| Jaeger | http://localhost:16686 |
-| Prometheus | http://localhost:9090 |
+Portas sequenciais a partir de **10000** (evita conflito com outros projetos locais).
+
+| Serviço | URL / porta |
+|---------|-------------|
+| Web | http://localhost:10000 |
+| API Gateway | http://localhost:10001 |
+| Health | http://localhost:10001/api/health |
+| Swagger UI | http://localhost:10001/swagger-ui.html |
+| Orders HTTP / gRPC | 10002 / 10003 |
+| Inventory HTTP / gRPC | 10004 / 10005 |
+| Payments | 10006 |
+| Notifications | 10007 |
+| MongoDB (host) | 10008 |
+| Kafka (host) | 10009 |
+| Grafana | http://localhost:10010 (`admin` / `admin`) |
+| Jaeger | http://localhost:10011 |
+| Prometheus | http://localhost:10012 |
+| OTel gRPC / HTTP | 10013 / 10014 |
 
 ### Smoke test
 
@@ -101,8 +110,8 @@ cd infra/helm/study-shop
 helm dependency update
 helm install study-shop . -n study-shop --create-namespace
 
-kubectl port-forward -n study-shop svc/api-gateway 8080:8080
-kubectl port-forward -n study-shop svc/web 3000:80
+kubectl port-forward -n study-shop svc/api-gateway 10001:10001
+kubectl port-forward -n study-shop svc/web 10000:80
 ```
 
 Build/load das imagens: ver [infra/helm/study-shop/README.md](infra/helm/study-shop/README.md).

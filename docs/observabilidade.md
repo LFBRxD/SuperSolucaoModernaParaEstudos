@@ -6,10 +6,10 @@ Como usar Grafana, Jaeger e Prometheus no lab (Docker Compose em `infra/`).
 
 | Ferramenta | URL | Credenciais |
 |------------|-----|-------------|
-| Grafana | http://localhost:3001 | `admin` / `admin` |
-| Jaeger UI | http://localhost:16686 | — |
-| Prometheus | http://localhost:9090 | — |
-| OTel Collector | `4317` (gRPC), `4318` (HTTP OTLP) | — |
+| Grafana | http://localhost:10010 | `admin` / `admin` |
+| Jaeger UI | http://localhost:10011 | — |
+| Prometheus | http://localhost:10012 | — |
+| OTel Collector (host) | `10013` (gRPC), `10014` (HTTP OTLP) | — |
 
 Subir a stack:
 
@@ -21,7 +21,7 @@ Subir a stack:
 
 ```
 Serviços Spring (OTEL_*)
-        │  OTLP HTTP :4318
+        │  OTLP HTTP :4318 (rede interna)
         ▼
   otel-collector
      ├──► Jaeger   (traces)
@@ -39,7 +39,7 @@ Variáveis típicas nos serviços:
 
 ## Jaeger — traces
 
-1. Abra http://localhost:16686
+1. Abra http://localhost:10011
 2. Em **Service**, selecione `api-gateway`, `orders-service`, etc.
 3. **Find Traces** após criar um pedido pela UI ou pelo smoke script.
 4. Abra um trace e confira spans HTTP/gRPC/Kafka (conforme instrumentação).
@@ -48,7 +48,7 @@ Variáveis típicas nos serviços:
 
 ## Prometheus — métricas
 
-1. Abra http://localhost:9090
+1. Abra http://localhost:10012
 2. Em **Graph**, consulte por exemplo:
    - `up` — alvos scrapeados
    - métricas Spring (`http_server_requests_*`, se expostas e scrapeadas)
@@ -58,7 +58,7 @@ O arquivo de scrape está em `infra/observability/prometheus/prometheus.yml`.
 
 ## Grafana — dashboards
 
-1. Abra http://localhost:3001 (`admin`/`admin`)
+1. Abra http://localhost:10010 (`admin`/`admin`)
 2. Datasources são provisionados em `infra/observability/grafana/provisioning/datasources/`
 3. Dashboards em `infra/observability/grafana/provisioning/dashboards/`
 4. Abra o dashboard **StudyShop** (JSON `studyshop.json`) com painel básico de `up{}`
@@ -71,7 +71,7 @@ O arquivo de scrape está em `infra/observability/prometheus/prometheus.yml`.
 
 ## Checklist rápido
 
-1. `curl http://localhost:8080/api/health` → UP  
+1. `curl http://localhost:10001/api/health` → UP  
 2. Criar pedido (UI ou smoke)  
 3. Jaeger mostra trace do `api-gateway`  
 4. Prometheus `up` retorna séries  

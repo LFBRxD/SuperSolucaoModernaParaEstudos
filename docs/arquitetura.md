@@ -21,18 +21,19 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
                     ┌─────────────┐
                     │    web      │
                     │  (React)    │
+                    │   :10000    │
                     └──────┬──────┘
                            │ HTTP
                     ┌──────▼──────┐
                     │ api-gateway │  REST → gRPC / HTTP
-                    │   :8080     │
+                    │   :10001    │
                     └───┬────┬────┘
-           gRPC :9081   │    │   gRPC :9082
+          gRPC :10003   │    │   gRPC :10005
          ┌──────────────┘    └──────────────┐
          ▼                                  ▼
 ┌─────────────────┐               ┌──────────────────┐
 │ orders-service  │               │ inventory-service│
-│  :8081 / :9081  │               │  :8082 / :9082   │
+│ :10002 / :10003 │               │ :10004 / :10005  │
 └────────┬────────┘               └────────┬─────────┘
          │                                 │
          │         Kafka topics            │
@@ -42,7 +43,7 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
          ▼             ▼             ▼
 ┌──────────────┐ ┌───────────┐ ┌────────────────────┐
 │payments-svc  │ │inventory  │ │notifications-svc   │
-│   :8083      │ │ (reserve) │ │   :8084            │
+│   :10006     │ │ (reserve) │ │   :10007           │
 └──────────────┘ └───────────┘ └────────────────────┘
          │             │             │
          └─────────────┴─────────────┘
@@ -50,7 +51,7 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
                        ▼
                  ┌──────────┐
                  │ MongoDB  │  (DBs lógicos por serviço)
-                 │  :27017  │
+                 │ host:10008│
                  └──────────┘
 ```
 
@@ -102,19 +103,24 @@ Variáveis `OTEL_*` nos serviços exportam traces OTLP HTTP para `otel-collector
 
 ## Portas (Compose)
 
+Sequência a partir de **10000** no host:
+
 | Serviço | Host |
 |---------|------|
-| web | 3000 → 80 |
-| api-gateway | 8080 |
-| orders | 8081, 9081 |
-| inventory | 8082, 9082 |
-| payments | 8083 |
-| notifications | 8084 |
-| mongodb | 27017 |
-| kafka | 9092 |
-| jaeger UI | 16686 |
-| prometheus | 9090 |
-| grafana | 3001 |
+| web | 10000 → 80 |
+| api-gateway | 10001 |
+| orders | 10002 (HTTP), 10003 (gRPC) |
+| inventory | 10004 (HTTP), 10005 (gRPC) |
+| payments | 10006 |
+| notifications | 10007 |
+| mongodb | 10008 → 27017 |
+| kafka | 10009 → 9092 |
+| grafana | 10010 → 3000 |
+| jaeger UI | 10011 → 16686 |
+| prometheus | 10012 → 9090 |
+| otel collector | 10013 → 4317, 10014 → 4318 |
+
+Internamente (rede Docker/K8s): Mongo permanece em `27017`, Kafka em `9092`, OTel em `4317/4318`.
 
 ## Limitações do lab
 

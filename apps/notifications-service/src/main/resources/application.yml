@@ -1,14 +1,14 @@
 server:
-  port: 8084
+  port: 10007
 
 spring:
   application:
     name: notifications-service
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/notifications}
+      uri: ${MONGODB_URI:mongodb://localhost:10008/notifications}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:10009}
     consumer:
       group-id: notifications-service
       auto-offset-reset: earliest

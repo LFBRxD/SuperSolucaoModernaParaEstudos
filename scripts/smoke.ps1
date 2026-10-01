@@ -1,8 +1,8 @@
 # Smoke test: health + cria pedido de exemplo.
 # Uso: .\scripts\smoke.ps1
-#      .\scripts\smoke.ps1 -BaseUrl http://localhost:8080
+#      .\scripts\smoke.ps1 -BaseUrl http://localhost:10001
 param(
-    [string]$BaseUrl = "http://localhost:8080"
+    [string]$BaseUrl = "http://localhost:10001"
 )
 $ErrorActionPreference = "Stop"
 

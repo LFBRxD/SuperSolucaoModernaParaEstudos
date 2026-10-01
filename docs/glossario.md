@@ -17,7 +17,7 @@ No StudyShop: orders publica a criação do pedido; inventory, payments e notifi
 
 **gRPC** é um framework RPC sobre HTTP/2 com contratos **Protocol Buffers** (`.proto`). Ideal para comunicação interna tipada e de baixa latência.
 
-No StudyShop: o api-gateway chama `orders-service` (porta 9081) e `inventory-service` (9082) via gRPC; a UI só vê REST.
+No StudyShop: o api-gateway chama `orders-service` (porta 10003) e `inventory-service` (10005) via gRPC; a UI só vê REST.
 
 - **Proto:** definição de mensagens e serviços.
 - **Stub/client:** código gerado para chamar o serviço remoto.

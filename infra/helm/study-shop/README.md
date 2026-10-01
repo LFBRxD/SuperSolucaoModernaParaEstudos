@@ -52,20 +52,20 @@ kubectl get svc -n study-shop
 API Gateway (REST):
 
 ```bash
-kubectl port-forward -n study-shop svc/api-gateway 8080:8080
+kubectl port-forward -n study-shop svc/api-gateway 10001:10001
 ```
 
 Frontend:
 
 ```bash
-kubectl port-forward -n study-shop svc/web 3000:80
+kubectl port-forward -n study-shop svc/web 10000:80
 ```
 
 Acesse:
 
-- Web: http://localhost:3000
-- Gateway health: http://localhost:8080/api/health
-- Swagger: http://localhost:8080/swagger-ui.html
+- Web: http://localhost:10000
+- Gateway health: http://localhost:10001/api/health
+- Swagger: http://localhost:10001/swagger-ui.html
 
 Se o Service `web` estiver como NodePort (`30080`), em kind/minikube também é possível mapear o node:
 
@@ -106,11 +106,12 @@ Com `fullnameOverride`, os Services usam nomes estáveis:
 |---------|-----|--------|
 | mongodb | `mongodb:27017` | 27017 |
 | kafka | `kafka:9092` | 9092 |
-| orders-service | `orders-service` | 8081 / 9081 |
-| inventory-service | `inventory-service` | 8082 / 9082 |
-| payments-service | `payments-service` | 8083 |
-| notifications-service | `notifications-service` | 8084 |
-| api-gateway | `api-gateway` | 8080 |
+| orders-service | `orders-service` | 10002 / 10003 |
+| inventory-service | `inventory-service` | 10004 / 10005 |
+| payments-service | `payments-service` | 10006 |
+| notifications-service | `notifications-service` | 10007 |
+| api-gateway | `api-gateway` | 10001 |
+| web | `web` | 80 |
 | web | `web` | 80 |
 
 ## Observabilidade no cluster

@@ -6,8 +6,8 @@ image:
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  httpPort: 8081
-  grpcPort: 9081
+  httpPort: 10002
+  grpcPort: 10003
 env:
   MONGODB_URI: "mongodb://mongodb:27017/orders"
   KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"

@@ -2,7 +2,7 @@ services:
   mongodb:
     image: mongo:7
     ports:
-      - "27017:27017"
+      - "10008:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -14,7 +14,7 @@ services:
   kafka:
     image: bitnami/kafka:3.9
     ports:
-      - "9092:9092"
+      - "10009:9092"
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
@@ -49,8 +49,8 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "8081:8081"
-      - "9081:9081"
+      - "10002:10002"
+      - "10003:10003"
 
   inventory-service:
     build:
@@ -70,8 +70,8 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "8082:8082"
-      - "9082:9082"
+      - "10004:10004"
+      - "10005:10005"
 
   payments-service:
     build:
@@ -91,7 +91,7 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "8083:8083"
+      - "10006:10006"
 
   notifications-service:
     build:
@@ -111,20 +111,20 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "8084:8084"
+      - "10007:10007"
 
   api-gateway:
     build:
       context: ..
       dockerfile: apps/api-gateway/Dockerfile
     environment:
-      ORDERS_GRPC_ADDRESS: static://orders-service:9081
-      INVENTORY_GRPC_ADDRESS: static://inventory-service:9082
-      NOTIFICATIONS_BASE_URL: http://notifications-service:8084
-      ORDERS_HEALTH_URL: http://orders-service:8081/actuator/health
-      INVENTORY_HEALTH_URL: http://inventory-service:8082/actuator/health
-      PAYMENTS_HEALTH_URL: http://payments-service:8083/actuator/health
-      NOTIFICATIONS_HEALTH_URL: http://notifications-service:8084/actuator/health
+      ORDERS_GRPC_ADDRESS: static://orders-service:10003
+      INVENTORY_GRPC_ADDRESS: static://inventory-service:10005
+      NOTIFICATIONS_BASE_URL: http://notifications-service:10007
+      ORDERS_HEALTH_URL: http://orders-service:10002/actuator/health
+      INVENTORY_HEALTH_URL: http://inventory-service:10004/actuator/health
+      PAYMENTS_HEALTH_URL: http://payments-service:10006/actuator/health
+      NOTIFICATIONS_HEALTH_URL: http://notifications-service:10007/actuator/health
       OTEL_SERVICE_NAME: api-gateway
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -136,7 +136,7 @@ services:
       - payments-service
       - notifications-service
     ports:
-      - "8080:8080"
+      - "10001:10001"
 
   web:
     build:
@@ -145,7 +145,7 @@ services:
     depends_on:
       - api-gateway
     ports:
-      - "3000:80"
+      - "10000:80"
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.116.0
@@ -153,8 +153,8 @@ services:
     volumes:
       - ./observability/otel/otel-collector-config.yaml:/etc/otelcol/config.yaml:ro
     ports:
-      - "4317:4317"
-      - "4318:4318"
+      - "10013:4317"
+      - "10014:4318"
     depends_on:
       - jaeger
       - prometheus
@@ -164,14 +164,14 @@ services:
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports:
-      - "16686:16686"
+      - "10011:16686"
 
   prometheus:
     image: prom/prometheus:v2.55.1
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
-      - "9090:9090"
+      - "10012:9090"
 
   grafana:
     image: grafana/grafana:11.3.1
@@ -183,7 +183,7 @@ services:
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
     ports:
-      - "3001:3000"
+      - "10010:3000"
     depends_on:
       - prometheus
       - jaeger

@@ -1,14 +1,14 @@
 server:
-  port: 8082
+  port: 10004
 
 spring:
   application:
     name: inventory-service
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/inventory}
+      uri: ${MONGODB_URI:mongodb://localhost:10008/inventory}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:10009}
     consumer:
       group-id: inventory-service
       auto-offset-reset: earliest
@@ -20,7 +20,7 @@ spring:
 
 grpc:
   server:
-    port: 9082
+    port: 10005
 
 management:
   endpoints:

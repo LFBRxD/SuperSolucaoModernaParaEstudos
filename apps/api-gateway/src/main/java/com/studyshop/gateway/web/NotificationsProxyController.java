@@ -16,7 +16,7 @@ public class NotificationsProxyController {
 
     private final RestClient restClient = RestClient.create();
 
-    @Value("${studyshop.notifications-base-url:http://localhost:8084}")
+    @Value("${studyshop.notifications-base-url:http://localhost:10007}")
     private String notificationsBaseUrl;
 
     @GetMapping
