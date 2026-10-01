@@ -21,6 +21,7 @@ Monorepo educacional para praticar **QA em arquitetura moderna**: Spring Boot, g
 
 ## Documentação
 
+- [Comandos Linux/WSL (aprender na prática)](docs/comandos-linux-wsl.md)
 - [Arquitetura](docs/arquitetura.md)
 - [Glossário](docs/glossario.md)
 - [Status do pedido (saga)](docs/status-pedido.md)
@@ -30,20 +31,43 @@ Monorepo educacional para praticar **QA em arquitetura moderna**: Spring Boot, g
 
 ## Pré-requisitos
 
-- Docker Desktop (ou Engine + Compose v2)
-- PowerShell 7+ (scripts)
+- Docker Engine + Compose v2 (Linux/WSL) ou Docker Desktop (Windows/Mac)
+- `curl` e, de preferência, `jq` (smoke/API)
+- (Opcional) scripts: Bash **ou** PowerShell 7+
 - (Opcional) JDK 21+, Maven, Node 20+ para build local
 - (Opcional) kind/minikube + Helm 3 para K8s
 
 ## Subir com Docker Compose
 
-Na raiz do repositório:
+### Linux / WSL (recomendado para aprender os comandos)
+
+Leia e pratique: **[docs/comandos-linux-wsl.md](docs/comandos-linux-wsl.md)**.
+
+Comando principal:
+
+```bash
+cd infra
+docker compose up -d --build
+```
+
+Atalhos:
+
+```bash
+chmod +x scripts/*.sh
+./scripts/up.sh
+./scripts/smoke.sh
+./scripts/down.sh
+./scripts/down.sh --volumes
+```
+
+### Windows (PowerShell)
 
 ```powershell
 .\scripts\up.ps1
+.\scripts\smoke.ps1
+.\scripts\down.ps1
+.\scripts\down.ps1 -Volumes
 ```
-
-Equivale a `docker compose up -d --build` em `infra/`.
 
 ### URLs
 
@@ -65,21 +89,6 @@ Portas sequenciais a partir de **10000** (evita conflito com outros projetos loc
 | Jaeger | http://localhost:10011 |
 | Prometheus | http://localhost:10012 |
 | OTel gRPC / HTTP | 10013 / 10014 |
-
-### Smoke test
-
-```powershell
-.\scripts\smoke.ps1
-```
-
-Valida health, lista produtos e cria um pedido de exemplo.
-
-### Parar
-
-```powershell
-.\scripts\down.ps1
-.\scripts\down.ps1 -Volumes   # também apaga volumes
-```
 
 ## API rápida
 
@@ -135,17 +144,16 @@ infra/
 docs/
 bruno/study-shop/
 scripts/
-  up.ps1
-  down.ps1
-  smoke.ps1
+  up.sh / down.sh / smoke.sh
+  up.ps1 / down.ps1 / smoke.ps1
 ```
 
 ## Fluxo de estudo sugerido
 
-1. Subir Compose e abrir a web.
-2. Percorrer [cenários de QA](docs/cenarios-qa.md).
+1. Ler [comandos Linux/WSL](docs/comandos-linux-wsl.md) e subir o Compose.
+2. Abrir a web e percorrer [cenários de QA](docs/cenarios-qa.md).
 3. Criar pedido e inspecionar traces no Jaeger.
-4. Rodar `smoke.ps1` e requests Bruno.
+4. Repetir com `curl`/`./scripts/smoke.sh` e Bruno.
 5. Instalar o chart Helm em kind e repetir port-forward.
 
 ## Licença / uso
