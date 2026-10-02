@@ -1,5 +1,5 @@
 server:
-  port: 10001
+  port: 11001
 
 spring:
   application:
@@ -8,19 +8,19 @@ spring:
 grpc:
   client:
     orders-service:
-      address: ${ORDERS_GRPC_ADDRESS:static://localhost:10003}
+      address: ${ORDERS_GRPC_ADDRESS:static://localhost:11003}
       negotiationType: plaintext
     inventory-service:
-      address: ${INVENTORY_GRPC_ADDRESS:static://localhost:10005}
+      address: ${INVENTORY_GRPC_ADDRESS:static://localhost:11005}
       negotiationType: plaintext
 
 studyshop:
-  notifications-base-url: ${NOTIFICATIONS_BASE_URL:http://localhost:10007}
+  notifications-base-url: ${NOTIFICATIONS_BASE_URL:http://localhost:11007}
   health:
-    orders-url: ${ORDERS_HEALTH_URL:http://localhost:10002/actuator/health}
-    inventory-url: ${INVENTORY_HEALTH_URL:http://localhost:10004/actuator/health}
-    payments-url: ${PAYMENTS_HEALTH_URL:http://localhost:10006/actuator/health}
-    notifications-url: ${NOTIFICATIONS_HEALTH_URL:http://localhost:10007/actuator/health}
+    orders-url: ${ORDERS_HEALTH_URL:http://localhost:11002/actuator/health}
+    inventory-url: ${INVENTORY_HEALTH_URL:http://localhost:11004/actuator/health}
+    payments-url: ${PAYMENTS_HEALTH_URL:http://localhost:11006/actuator/health}
+    notifications-url: ${NOTIFICATIONS_HEALTH_URL:http://localhost:11007/actuator/health}
 
 management:
   endpoints:

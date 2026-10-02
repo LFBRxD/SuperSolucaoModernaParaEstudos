@@ -19,16 +19,16 @@ public class HealthController {
     private final GrpcClients grpcClients;
     private final RestClient restClient = RestClient.create();
 
-    @Value("${studyshop.health.orders-url:http://localhost:10002/actuator/health}")
+    @Value("${studyshop.health.orders-url:http://localhost:11002/actuator/health}")
     private String ordersHealthUrl;
 
-    @Value("${studyshop.health.inventory-url:http://localhost:10004/actuator/health}")
+    @Value("${studyshop.health.inventory-url:http://localhost:11004/actuator/health}")
     private String inventoryHealthUrl;
 
-    @Value("${studyshop.health.payments-url:http://localhost:10006/actuator/health}")
+    @Value("${studyshop.health.payments-url:http://localhost:11006/actuator/health}")
     private String paymentsHealthUrl;
 
-    @Value("${studyshop.health.notifications-url:http://localhost:10007/actuator/health}")
+    @Value("${studyshop.health.notifications-url:http://localhost:11007/actuator/health}")
     private String notificationsHealthUrl;
 
     public HealthController(GrpcClients grpcClients) {

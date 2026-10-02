@@ -21,19 +21,19 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
                     ┌─────────────┐
                     │    web      │
                     │  (React)    │
-                    │   :10000    │
+                    │   :11000    │
                     └──────┬──────┘
                            │ HTTP
                     ┌──────▼──────┐
                     │ api-gateway │  REST → gRPC / HTTP
-                    │   :10001    │
+                    │   :11001    │
                     └───┬────┬────┘
-          gRPC :10003   │    │   gRPC :10005
+          gRPC :11003   │    │   gRPC :11005
          ┌──────────────┘    └──────────────┐
          ▼                                  ▼
 ┌─────────────────┐               ┌──────────────────┐
 │ orders-service  │               │ inventory-service│
-│ :10002 / :10003 │               │ :10004 / :10005  │
+│ :11002 / :11003 │               │ :11004 / :11005  │
 └────────┬────────┘               └────────┬─────────┘
          │                                 │
          │         Kafka topics            │
@@ -43,7 +43,7 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
          ▼             ▼             ▼
 ┌──────────────┐ ┌───────────┐ ┌────────────────────┐
 │payments-svc  │ │inventory  │ │notifications-svc   │
-│   :10006     │ │ (reserve) │ │   :10007           │
+│   :11006     │ │ (reserve) │ │   :11007           │
 └──────────────┘ └───────────┘ └────────────────────┘
          │             │             │
          └─────────────┴─────────────┘
@@ -51,7 +51,7 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
                        ▼
                  ┌──────────┐
                  │ MongoDB  │  (DBs lógicos por serviço)
-                 │ host:10008│
+                 │ host:11008│
                  └──────────┘
 ```
 
@@ -103,22 +103,22 @@ Variáveis `OTEL_*` nos serviços exportam traces OTLP HTTP para `otel-collector
 
 ## Portas (Compose)
 
-Sequência a partir de **10000** no host:
+Sequência a partir de **11000** no host:
 
 | Serviço | Host |
 |---------|------|
-| web | 10000 → 80 |
-| api-gateway | 10001 |
-| orders | 10002 (HTTP), 10003 (gRPC) |
-| inventory | 10004 (HTTP), 10005 (gRPC) |
-| payments | 10006 |
-| notifications | 10007 |
-| mongodb | 10008 → 27017 |
-| kafka | 10009 → 9092 |
-| grafana | 10010 → 3000 |
-| jaeger UI | 10011 → 16686 |
-| prometheus | 10012 → 9090 |
-| otel collector | 10013 → 4317, 10014 → 4318 |
+| web | 11000 → 80 |
+| api-gateway | 11001 |
+| orders | 11002 (HTTP), 11003 (gRPC) |
+| inventory | 11004 (HTTP), 11005 (gRPC) |
+| payments | 11006 |
+| notifications | 11007 |
+| mongodb | 11008 → 27017 |
+| kafka | 11009 → 19092 (EXTERNAL; apps usam `kafka:9092` na rede Docker) |
+| grafana | 11010 → 3000 |
+| jaeger UI | 11011 → 16686 |
+| prometheus | 11012 → 9090 |
+| otel collector | 11013 → 4317, 11014 → 4318 |
 
 Internamente (rede Docker/K8s): Mongo permanece em `27017`, Kafka em `9092`, OTel em `4317/4318`.
 

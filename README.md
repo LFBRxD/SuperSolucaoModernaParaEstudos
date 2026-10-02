@@ -71,24 +71,24 @@ chmod +x scripts/*.sh
 
 ### URLs
 
-Portas sequenciais a partir de **10000** (evita conflito com outros projetos locais).
+Portas sequenciais a partir de **11000** (evita conflito com outros projetos locais).
 
 | Serviço | URL / porta |
 |---------|-------------|
-| Web | http://localhost:10000 |
-| API Gateway | http://localhost:10001 |
-| Health | http://localhost:10001/api/health |
-| Swagger UI | http://localhost:10001/swagger-ui.html |
-| Orders HTTP / gRPC | 10002 / 10003 |
-| Inventory HTTP / gRPC | 10004 / 10005 |
-| Payments | 10006 |
-| Notifications | 10007 |
-| MongoDB (host) | 10008 |
-| Kafka (host) | 10009 |
-| Grafana | http://localhost:10010 (`admin` / `admin`) |
-| Jaeger | http://localhost:10011 |
-| Prometheus | http://localhost:10012 |
-| OTel gRPC / HTTP | 10013 / 10014 |
+| Web | http://localhost:11000 |
+| API Gateway | http://localhost:11001 |
+| Health | http://localhost:11001/api/health |
+| Swagger UI | http://localhost:11001/swagger-ui.html |
+| Orders HTTP / gRPC | 11002 / 11003 |
+| Inventory HTTP / gRPC | 11004 / 11005 |
+| Payments | 11006 |
+| Notifications | 11007 |
+| MongoDB (host) | 11008 |
+| Kafka (host) | 11009 |
+| Grafana | http://localhost:11010 (`admin` / `admin`) |
+| Jaeger | http://localhost:11011 |
+| Prometheus | http://localhost:11012 |
+| OTel gRPC / HTTP | 11013 / 11014 |
 
 ## API rápida
 
@@ -119,8 +119,8 @@ cd infra/helm/study-shop
 helm dependency update
 helm install study-shop . -n study-shop --create-namespace
 
-kubectl port-forward -n study-shop svc/api-gateway 10001:10001
-kubectl port-forward -n study-shop svc/web 10000:80
+kubectl port-forward -n study-shop svc/api-gateway 11001:11001
+kubectl port-forward -n study-shop svc/web 11000:80
 ```
 
 Build/load das imagens: ver [infra/helm/study-shop/README.md](infra/helm/study-shop/README.md).

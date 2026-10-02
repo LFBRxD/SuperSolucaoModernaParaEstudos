@@ -73,12 +73,12 @@ docker compose logs -f orders-service
 ### Health e UI
 
 ```bash
-curl -s http://localhost:10001/api/health | jq
-# Web:        http://localhost:10000
-# Swagger:    http://localhost:10001/swagger-ui.html
-# Grafana:    http://localhost:10010  (admin/admin)
-# Jaeger:     http://localhost:10011
-# Prometheus: http://localhost:10012
+curl -s http://localhost:11001/api/health | jq
+# Web:        http://localhost:11000
+# Swagger:    http://localhost:11001/swagger-ui.html
+# Grafana:    http://localhost:11010  (admin/admin)
+# Jaeger:     http://localhost:11011
+# Prometheus: http://localhost:11012
 ```
 
 Portas completas: [README](../README.md) e [arquitetura](arquitetura.md).
@@ -90,19 +90,19 @@ Portas completas: [README](../README.md) e [arquitetura](arquitetura.md).
 ### Health
 
 ```bash
-curl -s http://localhost:10001/api/health | jq
+curl -s http://localhost:11001/api/health | jq
 ```
 
 ### Listar produtos
 
 ```bash
-curl -s http://localhost:10001/api/products | jq
+curl -s http://localhost:11001/api/products | jq
 ```
 
 ### Criar pedido (caminho feliz)
 
 ```bash
-curl -s -X POST http://localhost:10001/api/orders \
+curl -s -X POST http://localhost:11001/api/orders \
   -H "Content-Type: application/json" \
   -d '{
     "customerEmail": "aluno@studyshop.local",
@@ -117,16 +117,16 @@ Guarde o `orderId` da resposta.
 
 ```bash
 ORDER_ID="cole-o-uuid-aqui"
-curl -s "http://localhost:10001/api/orders/$ORDER_ID" | jq
+curl -s "http://localhost:11001/api/orders/$ORDER_ID" | jq
 
 # polling simples a cada 2s
-watch -n 2 "curl -s http://localhost:10001/api/orders/$ORDER_ID | jq '{status,statusReason}'"
+watch -n 2 "curl -s http://localhost:11001/api/orders/$ORDER_ID | jq '{status,statusReason}'"
 ```
 
 ### Falha forçada de pagamento (cenário negativo)
 
 ```bash
-curl -s -X POST http://localhost:10001/api/orders \
+curl -s -X POST http://localhost:11001/api/orders \
   -H "Content-Type: application/json" \
   -H "X-Force-Payment-Failure: true" \
   -d '{
@@ -139,7 +139,7 @@ curl -s -X POST http://localhost:10001/api/orders \
 ### Ajustar estoque (admin)
 
 ```bash
-curl -s -X PUT http://localhost:10001/api/products/prod-raro/stock \
+curl -s -X PUT http://localhost:11001/api/products/prod-raro/stock \
   -H "Content-Type: application/json" \
   -d '{"quantity": 0}' | jq
 ```
@@ -149,7 +149,7 @@ Atalho:
 ```bash
 ./scripts/smoke.sh
 # ou
-BASE_URL=http://localhost:10001 ./scripts/smoke.sh
+BASE_URL=http://localhost:11001 ./scripts/smoke.sh
 ```
 
 Mais cenários: [cenarios-qa.md](cenarios-qa.md).
@@ -199,7 +199,7 @@ mvn -pl apps/api-gateway -am spring-boot:run
 cd apps/web
 npm install
 npm run dev
-# sobe em http://localhost:10000 e faz proxy /api -> :10001
+# sobe em http://localhost:11000 e faz proxy /api -> :11001
 ```
 
 ---
@@ -208,12 +208,12 @@ npm run dev
 
 ```bash
 # Targets do Prometheus
-curl -s http://localhost:10012/api/v1/targets | jq '.data.activeTargets[] | {job:.labels.job, health}'
+curl -s http://localhost:11012/api/v1/targets | jq '.data.activeTargets[] | {job:.labels.job, health}'
 
 # Abrir UIs no browser (WSL + Windows)
-# http://localhost:10010  Grafana
-# http://localhost:10011  Jaeger
-# http://localhost:10012  Prometheus
+# http://localhost:11010  Grafana
+# http://localhost:11011  Jaeger
+# http://localhost:11012  Prometheus
 ```
 
 Detalhes: [observabilidade.md](observabilidade.md).
@@ -239,9 +239,9 @@ kubectl get svc -n study-shop
 kubectl logs -n study-shop deploy/api-gateway -f
 
 # Expõe no localhost (mesma faixa de portas do lab)
-kubectl port-forward -n study-shop svc/api-gateway 10001:10001
+kubectl port-forward -n study-shop svc/api-gateway 11001:11001
 # em outro terminal:
-kubectl port-forward -n study-shop svc/web 10000:80
+kubectl port-forward -n study-shop svc/web 11000:80
 
 # Remover
 helm uninstall study-shop -n study-shop
@@ -272,9 +272,9 @@ docker compose exec api-gateway sh
 Porta em uso no host:
 
 ```bash
-ss -lptn 'sport = :10001'    # Linux
+ss -lptn 'sport = :11001'    # Linux
 # ou
-sudo lsof -i :10001
+sudo lsof -i :11001
 ```
 
 ---

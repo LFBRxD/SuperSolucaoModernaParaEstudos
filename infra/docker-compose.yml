@@ -2,7 +2,7 @@ services:
   mongodb:
     image: mongo:7
     ports:
-      - "10008:27017"
+      - "11008:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -12,24 +12,33 @@ services:
       retries: 10
 
   kafka:
-    image: bitnami/kafka:3.9
+    # Imagem oficial Apache (KRaft). Listeners: use "://:porta" (não 0.0.0.0).
+    image: apache/kafka:3.9.0
+    hostname: kafka
     ports:
-      - "10009:9092"
+      # host → EXTERNAL; apps na rede Docker usam kafka:9092 (INTERNAL)
+      - "11009:19092"
     environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:19092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:11009
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
       interval: 15s
       timeout: 10s
-      retries: 10
+      retries: 12
+      start_period: 40s
 
   orders-service:
     build:
@@ -49,8 +58,8 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "10002:10002"
-      - "10003:10003"
+      - "11002:11002"
+      - "11003:11003"
 
   inventory-service:
     build:
@@ -70,8 +79,8 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "10004:10004"
-      - "10005:10005"
+      - "11004:11004"
+      - "11005:11005"
 
   payments-service:
     build:
@@ -91,7 +100,7 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "10006:10006"
+      - "11006:11006"
 
   notifications-service:
     build:
@@ -111,20 +120,20 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "10007:10007"
+      - "11007:11007"
 
   api-gateway:
     build:
       context: ..
       dockerfile: apps/api-gateway/Dockerfile
     environment:
-      ORDERS_GRPC_ADDRESS: static://orders-service:10003
-      INVENTORY_GRPC_ADDRESS: static://inventory-service:10005
-      NOTIFICATIONS_BASE_URL: http://notifications-service:10007
-      ORDERS_HEALTH_URL: http://orders-service:10002/actuator/health
-      INVENTORY_HEALTH_URL: http://inventory-service:10004/actuator/health
-      PAYMENTS_HEALTH_URL: http://payments-service:10006/actuator/health
-      NOTIFICATIONS_HEALTH_URL: http://notifications-service:10007/actuator/health
+      ORDERS_GRPC_ADDRESS: static://orders-service:11003
+      INVENTORY_GRPC_ADDRESS: static://inventory-service:11005
+      NOTIFICATIONS_BASE_URL: http://notifications-service:11007
+      ORDERS_HEALTH_URL: http://orders-service:11002/actuator/health
+      INVENTORY_HEALTH_URL: http://inventory-service:11004/actuator/health
+      PAYMENTS_HEALTH_URL: http://payments-service:11006/actuator/health
+      NOTIFICATIONS_HEALTH_URL: http://notifications-service:11007/actuator/health
       OTEL_SERVICE_NAME: api-gateway
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -136,7 +145,7 @@ services:
       - payments-service
       - notifications-service
     ports:
-      - "10001:10001"
+      - "11001:11001"
 
   web:
     build:
@@ -145,36 +154,38 @@ services:
     depends_on:
       - api-gateway
     ports:
-      - "10000:80"
+      - "11000:80"
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.116.0
+    image: otel/opentelemetry-collector-contrib:0.120.0
     command: ["--config=/etc/otelcol/config.yaml"]
     volumes:
       - ./observability/otel/otel-collector-config.yaml:/etc/otelcol/config.yaml:ro
     ports:
-      - "10013:4317"
-      - "10014:4318"
+      - "11013:4317"
+      - "11014:4318"
     depends_on:
       - jaeger
       - prometheus
 
   jaeger:
-    image: jaegertracing/all-in-one:1.64
+    # Jaeger v2 (v1 all-in-one está em EOL desde 2025-12-31)
+    image: jaegertracing/jaeger:2.17.0
     environment:
-      COLLECTOR_OTLP_ENABLED: "true"
+      # Necessário para receber OTLP de outros containers (padrão v2 é localhost)
+      JAEGER_LISTEN_HOST: "0.0.0.0"
     ports:
-      - "10011:16686"
+      - "11011:16686"
 
   prometheus:
     image: prom/prometheus:v2.55.1
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
-      - "10012:9090"
+      - "11012:9090"
 
   grafana:
-    image: grafana/grafana:11.3.1
+    image: grafana/grafana:11.5.10
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
@@ -183,7 +194,7 @@ services:
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
     ports:
-      - "10010:3000"
+      - "11010:3000"
     depends_on:
       - prometheus
       - jaeger

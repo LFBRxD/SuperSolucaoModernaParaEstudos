@@ -1,4 +1,4 @@
-﻿fullnameOverride: orders-service
+fullnameOverride: orders-service
 replicaCount: 1
 image:
   repository: studyshop/orders-service
@@ -6,8 +6,8 @@ image:
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  httpPort: 10002
-  grpcPort: 10003
+  httpPort: 11002
+  grpcPort: 11003
 env:
   MONGODB_URI: "mongodb://mongodb:27017/orders"
   KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"

@@ -1,8 +1,8 @@
 # Smoke test: health + cria pedido de exemplo.
 # Uso: .\scripts\smoke.ps1
-#      .\scripts\smoke.ps1 -BaseUrl http://localhost:10001
+#      .\scripts\smoke.ps1 -BaseUrl http://localhost:11001
 param(
-    [string]$BaseUrl = "http://localhost:10001"
+    [string]$BaseUrl = "http://localhost:11001"
 )
 $ErrorActionPreference = "Stop"
 
@@ -28,7 +28,7 @@ $health.services | ForEach-Object {
     Write-Host ("  - {0}: {1}" -f $_.service, $_.status)
 }
 if ($health.overall -ne "UP") {
-    Write-Host "Health DEGRADED/DOWN — abortando create order." -ForegroundColor Yellow
+    Write-Host "Health DEGRADED/DOWN - abortando create order." -ForegroundColor Yellow
     exit 1
 }
 

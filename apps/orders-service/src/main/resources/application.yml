@@ -1,14 +1,14 @@
 server:
-  port: 10002
+  port: 11002
 
 spring:
   application:
     name: orders-service
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:10008/orders}
+      uri: ${MONGODB_URI:mongodb://localhost:11008/orders}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:10009}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:11009}
     consumer:
       group-id: orders-service
       auto-offset-reset: earliest
@@ -20,7 +20,7 @@ spring:
 
 grpc:
   server:
-    port: 10003
+    port: 11003
 
 management:
   endpoints:

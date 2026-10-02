@@ -14,6 +14,6 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.10.0/opentelemetry-javaagent.jar /otel/opentelemetry-javaagent.jar
 COPY --from=build /workspace/apps/payments-service/target/payments-service-*.jar app.jar
-EXPOSE 10006
+EXPOSE 11006
 ENV JAVA_TOOL_OPTIONS="-javaagent:/otel/opentelemetry-javaagent.jar"
 ENTRYPOINT ["java", "-jar", "app.jar"]

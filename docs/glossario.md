@@ -11,13 +11,13 @@ No StudyShop: orders publica a criação do pedido; inventory, payments e notifi
 - **Broker:** nó que armazena e serve os tópicos.
 - **Tópico:** fila lógica de mensagens (ex.: eventos de pedido).
 - **Consumer group:** conjunto de consumidores que dividem o processamento.
-- **KRaft:** modo do Kafka sem ZooKeeper (usado no Compose com Bitnami).
+- **KRaft:** modo do Kafka sem ZooKeeper (imagem oficial `apache/kafka` no Compose/Helm).
 
 ## gRPC
 
 **gRPC** é um framework RPC sobre HTTP/2 com contratos **Protocol Buffers** (`.proto`). Ideal para comunicação interna tipada e de baixa latência.
 
-No StudyShop: o api-gateway chama `orders-service` (porta 10003) e `inventory-service` (10005) via gRPC; a UI só vê REST.
+No StudyShop: o api-gateway chama `orders-service` (porta 11003) e `inventory-service` (11005) via gRPC; a UI só vê REST.
 
 - **Proto:** definição de mensagens e serviços.
 - **Stub/client:** código gerado para chamar o serviço remoto.

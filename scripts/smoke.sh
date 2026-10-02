@@ -2,10 +2,10 @@
 # Smoke test com curl/jq — bons comandos para estudar API.
 # Uso:
 #   ./scripts/smoke.sh
-#   BASE_URL=http://localhost:10001 ./scripts/smoke.sh
+#   BASE_URL=http://localhost:11001 ./scripts/smoke.sh
 set -euo pipefail
 
-BASE_URL="${BASE_URL:-http://localhost:10001}"
+BASE_URL="${BASE_URL:-http://localhost:11001}"
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "curl é obrigatório"

@@ -6,15 +6,15 @@ image:
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  httpPort: 10001
+  httpPort: 11001
 env:
-  ORDERS_GRPC_ADDRESS: "static://orders-service:10003"
-  INVENTORY_GRPC_ADDRESS: "static://inventory-service:10005"
-  NOTIFICATIONS_BASE_URL: "http://notifications-service:10007"
-  ORDERS_HEALTH_URL: "http://orders-service:10002/actuator/health"
-  INVENTORY_HEALTH_URL: "http://inventory-service:10004/actuator/health"
-  PAYMENTS_HEALTH_URL: "http://payments-service:10006/actuator/health"
-  NOTIFICATIONS_HEALTH_URL: "http://notifications-service:10007/actuator/health"
+  ORDERS_GRPC_ADDRESS: "static://orders-service:11003"
+  INVENTORY_GRPC_ADDRESS: "static://inventory-service:11005"
+  NOTIFICATIONS_BASE_URL: "http://notifications-service:11007"
+  ORDERS_HEALTH_URL: "http://orders-service:11002/actuator/health"
+  INVENTORY_HEALTH_URL: "http://inventory-service:11004/actuator/health"
+  PAYMENTS_HEALTH_URL: "http://payments-service:11006/actuator/health"
+  NOTIFICATIONS_HEALTH_URL: "http://notifications-service:11007/actuator/health"
   OTEL_SERVICE_NAME: "api-gateway"
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
   OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"

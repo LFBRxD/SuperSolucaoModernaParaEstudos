@@ -6,7 +6,7 @@ image:
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  httpPort: 10006
+  httpPort: 11006
 env:
   MONGODB_URI: "mongodb://mongodb:27017/payments"
   KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"

@@ -16,7 +16,8 @@ exporters:
       insecure: true
   prometheus:
     endpoint: 0.0.0.0:8889
-  logging:
+  # "logging" foi substituído por "debug" nas versões recentes do collector
+  debug:
     verbosity: basic
 
 service:
@@ -24,8 +25,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/jaeger, logging]
+      exporters: [otlp/jaeger, debug]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus, logging]
+      exporters: [prometheus, debug]
