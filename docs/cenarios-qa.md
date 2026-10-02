@@ -5,8 +5,24 @@ Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:11001`
 ## Pré-condição
 
 - Stack no ar (`scripts/up.ps1` ou Compose em `infra/`).
-- Health agregado UP: `GET /api/health`.
+- Health agregado UP: `GET /api/health` (público).
 - Produtos seed carregados (inventory na primeira subida).
+- Login Momento 1: `qa`/`qa123` (USER) ou `admin`/`admin123` (ADMIN). Ver [seguranca.md](seguranca.md).
+
+---
+
+## Cenário 0 — Auth JWT (401 / 403 / login)
+
+**Objetivo:** validar borda de segurança.
+
+1. `GET /api/products` sem header → **401**.
+2. `POST /api/auth/login` com `qa`/`qa123` → `accessToken` + roles `USER`.
+3. `GET /api/products` com `Authorization: Bearer …` → **200**.
+4. `PUT /api/products/prod-mouse/stock` com token `qa` → **403**.
+5. Login `admin` e mesmo PUT → **200**.
+6. Na web: `/login` → entrar como `qa`; menu Estoque oculto; sair e entrar como `admin`.
+
+**Smoke:** `./scripts/smoke.sh` ou `.\scripts\smoke.ps1`.
 
 ---
 
@@ -23,18 +39,19 @@ Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:11001`
 
 ## Cenário 2 — Listar catálogo
 
-1. Abrir página Catálogo (`/`).
-2. Confirmar cards dos 5 produtos seed.
+1. Fazer login na web.
+2. Abrir página Catálogo (`/`).
+3. Confirmar cards dos 5 produtos seed.
 
 **Esperado:** produtos `prod-notebook`, `prod-mouse`, `prod-headset`, `prod-teclado`, `prod-raro` visíveis com preço e estoque.
 
-**API:** `GET /api/products`
+**API:** `GET /api/products` + Bearer.
 
 ---
 
 ## Cenário 3 — Criar pedido feliz
 
-1. No catálogo, adicionar 1× `prod-mouse`.
+1. No catálogo (já autenticado), adicionar 1× `prod-mouse`.
 2. Informar e-mail em `input-customer-email`.
 3. Clicar `btn-create-order`.
 4. Seguir o link do pedido criado e aguardar status final (atualizar se necessário).
@@ -45,6 +62,7 @@ Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:11001`
 
 ```http
 POST /api/orders
+Authorization: Bearer <token>
 Content-Type: application/json
 
 {
@@ -75,6 +93,7 @@ Content-Type: application/json
 
 ```http
 POST /api/orders
+Authorization: Bearer <token>
 {
   "customerEmail": "qa@studyshop.local",
   "items": [{ "productId": "prod-raro", "quantity": 2 }]
@@ -87,11 +106,12 @@ POST /api/orders
 
 ## Cenário 6 — Atualizar estoque (admin)
 
-1. Ir em Estoque (`/admin/stock`).
-2. Alterar quantidade de um produto e salvar.
-3. Voltar ao catálogo e conferir estoque.
+1. Login como `admin`.
+2. Ir em Estoque (`/admin/stock`).
+3. Alterar quantidade de um produto e salvar.
+4. Voltar ao catálogo e conferir estoque.
 
-**API:** `PUT /api/products/{productId}/stock` body `{ "quantity": 20 }`
+**API:** `PUT /api/products/{productId}/stock` com Bearer ADMIN, body `{ "quantity": 20 }`
 
 ---
 
@@ -121,8 +141,22 @@ POST /api/orders
 | `brand-name` | Marca StudyShop |
 | `nav-catalog` | Link catálogo |
 | `nav-orders` | Link pedidos |
-| `nav-admin-stock` | Link estoque |
+| `nav-admin-stock` | Link estoque (só ADMIN) |
 | `nav-health` | Link health |
+| `nav-login` | Link entrar |
+| `btn-logout` | Sair |
+
+### Login
+
+| testid | Uso |
+|--------|-----|
+| `login-page` / `login-title` | Página |
+| `login-form` | Form JWT local |
+| `input-username` / `input-password` | Credenciais |
+| `btn-login` | Submit local |
+| `btn-oidc-login` | Keycloak (Momento 2) |
+| `login-error` | Erro |
+| `forbidden-page` | Sem role ADMIN |
 
 ### Catálogo
 

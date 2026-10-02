@@ -1,0 +1,14 @@
+# Ativar com: SPRING_PROFILES_ACTIVE=oidc (ou docker-compose.oidc.yml)
+studyshop:
+  auth:
+    mode: oidc
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Claim iss nos tokens (hostname visto pelo browser)
+          issuer-uri: ${OIDC_ISSUER_URI:http://localhost:11015/realms/study-shop}
+          # Fetch JWKS de dentro da rede Docker (gateway → keycloak)
+          jwk-set-uri: ${OIDC_JWK_SET_URI:http://localhost:11015/realms/study-shop/protocol/openid-connect/certs}

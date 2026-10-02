@@ -1,17 +1,13 @@
 meta {
-  name: update stock
+  name: login admin
   type: http
-  seq: 4
+  seq: 0
 }
 
-put {
-  url: {{baseUrl}}/api/products/{{productId}}/stock
+post {
+  url: {{baseUrl}}/api/auth/login
   body: json
-  auth: bearer
-}
-
-auth:bearer {
-  token: {{accessToken}}
+  auth: none
 }
 
 headers {
@@ -21,13 +17,17 @@ headers {
 
 body:json {
   {
-    "quantity": 20
+    "username": "admin",
+    "password": "admin123"
   }
 }
 
 vars:pre-request {
   baseUrl: http://localhost:11001
-  productId: prod-mouse
+}
+
+script:post-response {
+  bru.setVar("accessToken", res.body.accessToken);
 }
 
 assert {

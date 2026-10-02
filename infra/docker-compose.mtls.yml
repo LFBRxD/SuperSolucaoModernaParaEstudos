@@ -1,0 +1,35 @@
+# Overlay Momento 3 — mTLS no gRPC (gateway ↔ orders/inventory)
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.mtls.yml up -d --build
+# Combinar com OIDC:
+#   docker compose -f docker-compose.yml -f docker-compose.oidc.yml -f docker-compose.mtls.yml up -d --build
+
+services:
+  orders-service:
+    environment:
+      SPRING_PROFILES_ACTIVE: mtls
+      GRPC_SERVER_CERT: file:/certs/orders.crt
+      GRPC_SERVER_KEY: file:/certs/orders.key
+      GRPC_TRUST_CERT: file:/certs/ca.crt
+    volumes:
+      - ./certs:/certs:ro
+
+  inventory-service:
+    environment:
+      SPRING_PROFILES_ACTIVE: mtls
+      GRPC_SERVER_CERT: file:/certs/inventory.crt
+      GRPC_SERVER_KEY: file:/certs/inventory.key
+      GRPC_TRUST_CERT: file:/certs/ca.crt
+    volumes:
+      - ./certs:/certs:ro
+
+  api-gateway:
+    environment:
+      # Preserva oidc se já setado pelo outro overlay; compose faz merge de maps
+      # mas SPRING_PROFILES_ACTIVE é substituído — combine manualmente se usar os dois.
+      SPRING_PROFILES_ACTIVE: ${GATEWAY_SPRING_PROFILES:-mtls}
+      GRPC_CLIENT_CERT: file:/certs/gateway.crt
+      GRPC_CLIENT_KEY: file:/certs/gateway.key
+      GRPC_TRUST_CERT: file:/certs/ca.crt
+    volumes:
+      - ./certs:/certs:ro

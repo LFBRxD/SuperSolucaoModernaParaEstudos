@@ -5,22 +5,38 @@ spring:
   application:
     name: api-gateway
 
-grpc:
-  client:
-    orders-service:
-      address: ${ORDERS_GRPC_ADDRESS:static://localhost:11003}
-      negotiationType: plaintext
-    inventory-service:
-      address: ${INVENTORY_GRPC_ADDRESS:static://localhost:11005}
-      negotiationType: plaintext
-
 studyshop:
+  auth:
+    mode: ${STUDYSHOP_AUTH_MODE:local}
+  jwt:
+    secret: ${JWT_SECRET:studyshop-lab-jwt-secret-change-me-32chars-min}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+    issuer: studyshop-local
   notifications-base-url: ${NOTIFICATIONS_BASE_URL:http://localhost:11007}
   health:
     orders-url: ${ORDERS_HEALTH_URL:http://localhost:11002/actuator/health}
     inventory-url: ${INVENTORY_HEALTH_URL:http://localhost:11004/actuator/health}
     payments-url: ${PAYMENTS_HEALTH_URL:http://localhost:11006/actuator/health}
     notifications-url: ${NOTIFICATIONS_HEALTH_URL:http://localhost:11007/actuator/health}
+
+grpc:
+  client:
+    orders-service:
+      address: ${ORDERS_GRPC_ADDRESS:static://localhost:11003}
+      negotiationType: ${GRPC_NEGOTIATION_TYPE:plaintext}
+      security:
+        clientAuthEnabled: ${GRPC_CLIENT_AUTH_ENABLED:false}
+        certificateChain: ${GRPC_CLIENT_CERT:file:../infra/certs/gateway.crt}
+        privateKey: ${GRPC_CLIENT_KEY:file:../infra/certs/gateway.key}
+        trustCertCollection: ${GRPC_TRUST_CERT:file:../infra/certs/ca.crt}
+    inventory-service:
+      address: ${INVENTORY_GRPC_ADDRESS:static://localhost:11005}
+      negotiationType: ${GRPC_NEGOTIATION_TYPE:plaintext}
+      security:
+        clientAuthEnabled: ${GRPC_CLIENT_AUTH_ENABLED:false}
+        certificateChain: ${GRPC_CLIENT_CERT:file:../infra/certs/gateway.crt}
+        privateKey: ${GRPC_CLIENT_KEY:file:../infra/certs/gateway.key}
+        trustCertCollection: ${GRPC_TRUST_CERT:file:../infra/certs/ca.crt}
 
 management:
   endpoints:

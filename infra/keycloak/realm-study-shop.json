@@ -1,0 +1,79 @@
+{
+  "realm": "study-shop",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "USER", "description": "Cliente / QA" },
+      { "name": "ADMIN", "description": "Administrador de estoque" }
+    ]
+  },
+  "users": [
+    {
+      "username": "qa",
+      "enabled": true,
+      "email": "qa@studyshop.local",
+      "emailVerified": true,
+      "firstName": "QA",
+      "lastName": "User",
+      "credentials": [
+        { "type": "password", "value": "qa123", "temporary": false }
+      ],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@studyshop.local",
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "credentials": [
+        { "type": "password", "value": "admin123", "temporary": false }
+      ],
+      "realmRoles": ["USER", "ADMIN"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "study-shop-web",
+      "name": "StudyShop Web",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "redirectUris": [
+        "http://localhost:11000/*",
+        "http://127.0.0.1:11000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:11000",
+        "http://127.0.0.1:11000",
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocol": "openid-connect",
+      "fullScopeAllowed": true
+    },
+    {
+      "clientId": "study-shop-gateway",
+      "name": "StudyShop API Gateway",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "gateway-lab-secret",
+      "serviceAccountsEnabled": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "bearerOnly": true,
+      "protocol": "openid-connect"
+    }
+  ]
+}

@@ -36,7 +36,18 @@ a.active { color: var(--accent-2); }
   width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
   background: linear-gradient(135deg, var(--accent), #1f8f5f); color: #042116; font-weight: 700;
 }
-.nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+.nav { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+.nav-logout {
+  background: transparent;
+  color: var(--accent-2);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.login-page { max-width: 420px; }
+.muted-note { color: var(--muted); font-size: 0.85rem; margin: 0; }
+.muted-note code { color: var(--accent-2); }
 .content { margin-top: 1.5rem; }
 .page-head h1 { margin: 0 0 0.35rem; font-size: 1.8rem; }
 .page-head p { margin: 0 0 1rem; color: var(--muted); }

@@ -1,0 +1,55 @@
+# Overlay Momento 2 — OIDC / Keycloak
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.oidc.yml up -d --build
+#
+# Issuer interno (gateway): http://keycloak:8080/realms/study-shop
+# Issuer no browser:        http://localhost:11015/realms/study-shop
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
+    command: ["start-dev", "--import-realm", "--http-port=8080"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 8080
+      # Hostname para tokens / issuer acessível do host e do browser
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 11015
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY_HEADERS: xforwarded
+    volumes:
+      - ./keycloak/realm-study-shop.json:/opt/keycloak/data/import/realm-study-shop.json:ro
+    ports:
+      - "11015:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  api-gateway:
+    environment:
+      STUDYSHOP_AUTH_MODE: oidc
+      SPRING_PROFILES_ACTIVE: ${GATEWAY_SPRING_PROFILES:-oidc}
+      OIDC_ISSUER_URI: http://localhost:11015/realms/study-shop
+      OIDC_JWK_SET_URI: http://keycloak:8080/realms/study-shop/protocol/openid-connect/certs
+    depends_on:
+      keycloak:
+        condition: service_started
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_AUTH_MODE: oidc
+        VITE_OIDC_AUTHORITY: http://localhost:11015/realms/study-shop
+        VITE_OIDC_CLIENT_ID: study-shop-web
+        VITE_OIDC_REDIRECT_URI: http://localhost:11000/login/callback
+    depends_on:
+      - api-gateway
+      - keycloak

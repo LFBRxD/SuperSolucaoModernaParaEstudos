@@ -117,3 +117,14 @@ Com `fullnameOverride`, os Services usam nomes estáveis:
 ## Observabilidade no cluster
 
 O chart **não** inclui OTel/Grafana/Prometheus. Para o lab completo de telemetria, use o Docker Compose em `infra/docker-compose.yml`.
+
+## Segurança (lab)
+
+O subchart `api-gateway` inclui `STUDYSHOP_AUTH_MODE=local` e `JWT_SECRET` (Momento 1).
+
+Overlays Compose (local, fora do Helm):
+
+- `infra/docker-compose.oidc.yml` — Keycloak / OIDC
+- `infra/docker-compose.mtls.yml` — mTLS gRPC
+
+Trilha completa: [docs/seguranca.md](../../../docs/seguranca.md).

@@ -21,7 +21,16 @@ No StudyShop: o api-gateway chama `orders-service` (porta 11003) e `inventory-se
 
 - **Proto:** definição de mensagens e serviços.
 - **Stub/client:** código gerado para chamar o serviço remoto.
-- **plaintext:** sem TLS — aceitável só no lab.
+- **plaintext:** sem TLS — aceitável só no lab (default). Com Momento 3, gRPC usa mTLS.
+
+## Segurança
+
+- **JWT:** token assinado (claims: quem é o usuário, roles, expiração). Momento 1 = HS256 no gateway; Momento 2 = Keycloak (RS256 + JWKS).
+- **Bearer:** header `Authorization: Bearer <token>`.
+- **OIDC / OAuth2 Resource Server:** gateway valida JWT emitido por um IdP (Keycloak) via `issuer-uri` / JWKS.
+- **mTLS:** cliente e servidor apresentam certificados na conexão TLS (identidade de serviço).
+- **401 vs 403:** 401 = sem autenticação válida; 403 = autenticado, sem permissão (role).
+- **JWKS:** conjunto de chaves públicas do IdP para verificar assinatura do JWT.
 
 ## Helm
 

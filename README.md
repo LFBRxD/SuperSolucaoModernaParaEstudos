@@ -23,6 +23,10 @@ Monorepo educacional para praticar **QA em arquitetura moderna**: Spring Boot, g
 
 - [Comandos Linux/WSL (aprender na prática)](docs/comandos-linux-wsl.md)
 - [Arquitetura](docs/arquitetura.md)
+- [Segurança (JWT + OIDC + mTLS)](docs/seguranca.md)
+- [Tutorial JWT local](docs/tutoriais/01-jwt-local.md)
+- [Tutorial OIDC/Keycloak](docs/tutoriais/02-oidc-keycloak.md)
+- [Tutorial mTLS gRPC](docs/tutoriais/03-mtls-grpc.md)
 - [Glossário](docs/glossario.md)
 - [Status do pedido (saga)](docs/status-pedido.md)
 - [Cenários de QA + data-testid](docs/cenarios-qa.md)
@@ -85,6 +89,7 @@ Portas sequenciais a partir de **11000** (evita conflito com outros projetos loc
 | Notifications | 11007 |
 | MongoDB (host) | 11008 |
 | Kafka (host) | 11009 |
+| Keycloak | http://localhost:11015 (overlay OIDC) |
 | Grafana | http://localhost:11010 (`admin` / `admin`) |
 | Jaeger | http://localhost:11011 |
 | Prometheus | http://localhost:11012 |
@@ -93,12 +98,23 @@ Portas sequenciais a partir de **11000** (evita conflito com outros projetos loc
 ## API rápida
 
 ```http
+POST /api/auth/login
 GET  /api/health
 GET  /api/products
 POST /api/orders
 GET  /api/orders/{orderId}
-PUT  /api/products/{productId}/stock
+PUT  /api/products/{productId}/stock   # role ADMIN
 ```
+
+Login (Momento 1):
+
+```json
+{ "username": "qa", "password": "qa123" }
+```
+
+Envie `Authorization: Bearer <accessToken>` nas rotas protegidas.
+
+Usuários seed: `qa`/`qa123` (USER), `admin`/`admin123` (ADMIN).
 
 Exemplo de pedido:
 
@@ -110,7 +126,7 @@ Exemplo de pedido:
 }
 ```
 
-Coleção Bruno: pasta `bruno/study-shop/` (abra no cliente Bruno).
+Coleção Bruno: pasta `bruno/study-shop/` (rode `login` antes). Trilha de segurança: [docs/seguranca.md](docs/seguranca.md).
 
 ## Helm (kind / minikube)
 
@@ -151,10 +167,11 @@ scripts/
 ## Fluxo de estudo sugerido
 
 1. Ler [comandos Linux/WSL](docs/comandos-linux-wsl.md) e subir o Compose.
-2. Abrir a web e percorrer [cenários de QA](docs/cenarios-qa.md).
-3. Criar pedido e inspecionar traces no Jaeger.
-4. Repetir com `curl`/`./scripts/smoke.sh` e Bruno.
-5. Instalar o chart Helm em kind e repetir port-forward.
+2. Abrir a web, fazer login e percorrer [cenários de QA](docs/cenarios-qa.md).
+3. Completar [tutorial JWT local](docs/tutoriais/01-jwt-local.md); depois OIDC e mTLS.
+4. Criar pedido e inspecionar traces no Jaeger.
+5. Repetir com `curl`/`./scripts/smoke.sh` e Bruno.
+6. Instalar o chart Helm em kind e repetir port-forward.
 
 ## Licença / uso
 

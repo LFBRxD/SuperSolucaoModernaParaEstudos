@@ -83,6 +83,8 @@ Estados típicos: `PENDING` → `RESERVED` / `PAYMENT_*` → `COMPLETED` ou `FAI
 
 - **Síncrona:** REST (browser ↔ gateway) e gRPC (gateway ↔ orders/inventory).
 - **Assíncrona:** Kafka entre orders, inventory, payments e notifications.
+- **Auth (borda):** JWT Bearer no api-gateway (local HS256 ou OIDC/Keycloak).
+- **Auth (serviço):** mTLS opcional no gRPC (overlay Compose).
 - **Health:** gateway agrega Actuator HTTP + checagem gRPC do inventory.
 
 ## Dados seed (inventory)
@@ -119,12 +121,14 @@ Sequência a partir de **11000** no host:
 | jaeger UI | 11011 → 16686 |
 | prometheus | 11012 → 9090 |
 | otel collector | 11013 → 4317, 11014 → 4318 |
+| keycloak (overlay oidc) | 11015 → 8080 |
 
 Internamente (rede Docker/K8s): Mongo permanece em `27017`, Kafka em `9092`, OTel em `4317/4318`.
 
 ## Limitações do lab
 
-- Mongo/Kafka single-node, sem TLS/auth.
+- Mongo/Kafka single-node, sem TLS/auth (TLS de serviço coberto só no gRPC — Momento 3).
 - Sem API gateway de produção (Spring Cloud Gateway avançado, rate limit, etc.).
 - Pagamento simulado (flag de falha forçada para QA negativo).
 - Charts Helm espelham o Compose de forma didática, não HA.
+- JWT local / OIDC / mTLS são perfis de estudo — ver [seguranca.md](seguranca.md).

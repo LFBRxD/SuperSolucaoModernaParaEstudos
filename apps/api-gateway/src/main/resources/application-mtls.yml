@@ -1,0 +1,17 @@
+# Perfil mtls — cliente gRPC com certificado mútuo
+grpc:
+  client:
+    orders-service:
+      negotiationType: TLS
+      security:
+        clientAuthEnabled: true
+        certificateChain: ${GRPC_CLIENT_CERT:file:/certs/gateway.crt}
+        privateKey: ${GRPC_CLIENT_KEY:file:/certs/gateway.key}
+        trustCertCollection: ${GRPC_TRUST_CERT:file:/certs/ca.crt}
+    inventory-service:
+      negotiationType: TLS
+      security:
+        clientAuthEnabled: true
+        certificateChain: ${GRPC_CLIENT_CERT:file:/certs/gateway.crt}
+        privateKey: ${GRPC_CLIENT_KEY:file:/certs/gateway.key}
+        trustCertCollection: ${GRPC_TRUST_CERT:file:/certs/ca.crt}

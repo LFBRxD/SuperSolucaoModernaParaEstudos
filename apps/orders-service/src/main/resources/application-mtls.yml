@@ -1,0 +1,8 @@
+grpc:
+  server:
+    security:
+      enabled: true
+      certificateChain: ${GRPC_SERVER_CERT:file:/certs/orders.crt}
+      privateKey: ${GRPC_SERVER_KEY:file:/certs/orders.key}
+      trustCertCollection: ${GRPC_TRUST_CERT:file:/certs/ca.crt}
+      clientAuth: REQUIRE
