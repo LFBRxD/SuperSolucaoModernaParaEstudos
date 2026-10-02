@@ -12,28 +12,20 @@
 [![Lab](https://img.shields.io/badge/ambiente-estudo%20(n%C3%A3o%20produ%C3%A7%C3%A3o)-lightgrey)](#duas-portas-de-entrada-escolha-a-sua)
 
 <p align="center">
-  <img src="docs/assets/hero-mesa-estudo.jpg" alt="Mesa de estudo com notebook e luz quente" width="900" />
+  <img src="docs/assets/hero-mesa-estudo.jpg" alt="Mesa com notebook" width="900" />
 </p>
-
-<p align="center"><em>Você não precisa chegar motivado todo dia. A trilha existe para te segurar nos dias frouxos.</em></p>
 
 Você chegou. Não precisa fingir que já entende microserviços, Kafka ou gRPC.
 
-Este projeto começou pequeno e ganhou outro tamanho: não é só “suba o Docker e clique”. É um **laboratório de e-commerce** (o StudyShop) feito para QA e para quem quer **entender o que está acontecendo** — tela, API, banco, mensagens, segurança, traces — e, se quiser, **reconstruir algo parecido do zero**.
+Este projeto começou pequeno e ganhou outro tamanho: não é só “suba o Docker e clique”. É um **laboratório de e-commerce** (o StudyShop) para QA e para quem quer **ver o que está acontecendo** — tela, API, banco, mensagens, segurança, traces — e, se quiser, **montar algo parecido do zero**.
 
-Não é produção. Senhas e segredos são de lab. O objetivo é aprender sem medo de errar.
+Não é produção. Senhas e segredos são de lab.
 
-## Por que isto existe (e por que compartilhar)
+## Por que isto existe
 
-Eu montei e estudei isto a partir do zero. Quero que outras pessoas tenham **a mesma chance** — amigos, colegas, quem nunca abriu um Compose.
+Eu montei e estudei a partir do zero. O material está aberto para quem quiser a mesma base — amigos, colegas, quem nunca abriu um Compose.
 
-Nem todo mundo é automotivado. Esperar “disciplina infinita” exclui gente boa. Por isso a academia tem **ordem, diagramas, sessões curtas, pistas e critérios de “termineí”**: o caminho carrega quem ainda não carrega sozinho.
-
-<p align="center">
-  <img src="docs/assets/estudando-juntos.jpg" alt="Pessoas estudando juntas com notebook" width="720" />
-</p>
-
-Estude sozinho ou em dupla. Combine um horário. Se travar, anote o que tentou — isso também conta.
+A academia não é motivacional. É **ordem**: próximo arquivo, lab curto, diagrama, o que fazer com a mão, quando parar. Se você só “abre o repo e se vira”, a chance de se perder é alta. Se seguir a Semana 1 em diante, pelo menos sabe onde está.
 
 ---
 
@@ -66,7 +58,7 @@ Neste caminho, **este repositório é o oráculo** (a prova dos nove: o sistema 
 Como estudar sem se perder: [docs/academia-qa/como-estudar.md](docs/academia-qa/como-estudar.md).
 
 <p align="center">
-  <img src="docs/assets/hero-notebook-codigo.jpg" alt="Notebook com código em uma mesa de estudo" width="720" />
+  <img src="docs/assets/hero-notebook-codigo.jpg" alt="Notebook com código" width="720" />
 </p>
 
 ---

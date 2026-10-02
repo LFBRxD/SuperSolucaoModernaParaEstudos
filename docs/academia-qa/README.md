@@ -2,9 +2,7 @@
 
 Este arquivo só aponta. O estudo está nos arquivos de cada semana.
 
-Formação de **12 semanas**, **8 a 10 horas por semana**. Você estuda sozinho ou com alguém. Cada sessão tem o próprio markdown. Figura antes do texto.
-
-Nem todo mundo acorda motivado. A ordem da semana existe para você não depender só de vontade: abra o próximo arquivo, faça o lab, marque o checklist.
+Formação de **12 semanas**, **8 a 10 horas por semana**. Cada sessão tem o próprio markdown. Figura antes do texto. Siga a Semana 1 de cima para baixo.
 
 ## Como usar
 
