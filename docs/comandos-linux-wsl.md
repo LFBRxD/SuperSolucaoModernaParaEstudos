@@ -93,10 +93,21 @@ Portas completas: [README](../README.md) e [arquitetura](arquitetura.md).
 curl -s http://localhost:11001/api/health | jq
 ```
 
+### Login (obrigatório nas rotas de negócio)
+
+`/api/health` é público. `/api/products` e `/api/orders` exigem `Authorization: Bearer`.
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:11001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"qa","password":"qa123"}' | jq -r .accessToken)
+```
+
 ### Listar produtos
 
 ```bash
-curl -s http://localhost:11001/api/products | jq
+curl -s http://localhost:11001/api/products \
+  -H "Authorization: Bearer $TOKEN" | jq
 ```
 
 ### Criar pedido (caminho feliz)
@@ -104,6 +115,7 @@ curl -s http://localhost:11001/api/products | jq
 ```bash
 curl -s -X POST http://localhost:11001/api/orders \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "customerEmail": "aluno@studyshop.local",
     "forcePaymentFailure": false,
@@ -117,10 +129,11 @@ Guarde o `orderId` da resposta.
 
 ```bash
 ORDER_ID="cole-o-uuid-aqui"
-curl -s "http://localhost:11001/api/orders/$ORDER_ID" | jq
+curl -s "http://localhost:11001/api/orders/$ORDER_ID" \
+  -H "Authorization: Bearer $TOKEN" | jq
 
 # polling simples a cada 2s
-watch -n 2 "curl -s http://localhost:11001/api/orders/$ORDER_ID | jq '{status,statusReason}'"
+watch -n 2 "curl -s http://localhost:11001/api/orders/$ORDER_ID -H \"Authorization: Bearer $TOKEN\" | jq '{status,statusReason}'"
 ```
 
 ### Falha forçada de pagamento (cenário negativo)
@@ -128,6 +141,7 @@ watch -n 2 "curl -s http://localhost:11001/api/orders/$ORDER_ID | jq '{status,st
 ```bash
 curl -s -X POST http://localhost:11001/api/orders \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -H "X-Force-Payment-Failure: true" \
   -d '{
     "customerEmail": "qa-fail@studyshop.local",
@@ -139,9 +153,15 @@ curl -s -X POST http://localhost:11001/api/orders \
 ### Ajustar estoque (admin)
 
 ```bash
+# token de admin (qa recebe 403)
+ADMIN=$(curl -s -X POST http://localhost:11001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}' | jq -r .accessToken)
+
 curl -s -X PUT http://localhost:11001/api/products/prod-raro/stock \
   -H "Content-Type: application/json" \
-  -d '{"quantity": 0}' | jq
+  -H "Authorization: Bearer $ADMIN" \
+  -d '{"quantity": 1}' | jq
 ```
 
 Atalho:

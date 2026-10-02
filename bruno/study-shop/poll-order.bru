@@ -1,0 +1,38 @@
+meta {
+  name: poll order
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/api/orders/{{orderId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:11001
+}
+
+script:post-response {
+  const status = res.body.status;
+  const finals = ["CONFIRMED", "CANCELLED"];
+  const count = Number(bru.getVar("pollCount") || "0");
+  if (!finals.includes(status) && count < 30) {
+    bru.setVar("pollCount", String(count + 1));
+    await bru.sleep(1000);
+    bru.setNextRequest("poll order");
+  }
+}
+
+assert {
+  res.status: eq 200
+}

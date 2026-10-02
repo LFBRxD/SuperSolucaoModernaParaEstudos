@@ -1,11 +1,107 @@
-# StudyShop — Lab QA de Microserviços
+# StudyShop
 
-Monorepo educacional para praticar **QA em arquitetura moderna**: Spring Boot, gRPC, Kafka, MongoDB, React, Docker Compose, Helm, OpenTelemetry, Jaeger, Prometheus e Grafana.
+[![Java 21](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Kafka](https://img.shields.io/badge/Apache%20Kafka-KRaft-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![gRPC](https://img.shields.io/badge/gRPC-Protobuf-244c5a?logo=grpc&logoColor=white)](https://grpc.io/)
+[![React](https://img.shields.io/badge/React-Vite-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Academia](https://img.shields.io/badge/Academia%20QA-12%20semanas-0A66C2)](docs/academia-qa/README.md)
+[![Lab](https://img.shields.io/badge/ambiente-estudo%20(n%C3%A3o%20produ%C3%A7%C3%A3o)-lightgrey)](#duas-portas-de-entrada-escolha-a-sua)
 
-> Ambiente de estudo. Não é produção.
+<p align="center">
+  <img src="docs/assets/hero-mesa-estudo.jpg" alt="Mesa de estudo com notebook e luz quente" width="900" />
+</p>
 
-## O que tem no lab
+<p align="center"><em>Você não precisa chegar motivado todo dia. A trilha existe para te segurar nos dias frouxos.</em></p>
 
+Você chegou. Não precisa fingir que já entende microserviços, Kafka ou gRPC.
+
+Este projeto começou pequeno e ganhou outro tamanho: não é só “suba o Docker e clique”. É um **laboratório de e-commerce** (o StudyShop) feito para QA e para quem quer **entender o que está acontecendo** — tela, API, banco, mensagens, segurança, traces — e, se quiser, **reconstruir algo parecido do zero**.
+
+Não é produção. Senhas e segredos são de lab. O objetivo é aprender sem medo de errar.
+
+## Por que isto existe (e por que compartilhar)
+
+Eu montei e estudei isto a partir do zero. Quero que outras pessoas tenham **a mesma chance** — amigos, colegas, quem nunca abriu um Compose.
+
+Nem todo mundo é automotivado. Esperar “disciplina infinita” exclui gente boa. Por isso a academia tem **ordem, diagramas, sessões curtas, pistas e critérios de “termineí”**: o caminho carrega quem ainda não carrega sozinho.
+
+<p align="center">
+  <img src="docs/assets/estudando-juntos.jpg" alt="Pessoas estudando juntas com notebook" width="720" />
+</p>
+
+Estude sozinho ou em dupla. Combine um horário. Se travar, anote o que tentou — isso também conta.
+
+---
+
+## Duas portas de entrada (escolha a sua)
+
+### 1) Quero só rodar e ver funcionar
+
+Fica nesta página, na seção [Subir com Docker Compose](#subir-com-docker-compose).
+
+| Passo | O quê |
+|-------|--------|
+| Subir | `.\scripts\up.ps1` (Windows) ou `./scripts/up.sh` (Linux/WSL) |
+| Abrir a loja | http://localhost:11000 — login `qa` / `qa123` |
+| Ver se está vivo | http://localhost:11001/api/health |
+| Smoke rápido | `.\scripts\smoke.ps1` ou `./scripts/smoke.sh` |
+| Derrubar | `.\scripts\down.ps1` ou `./scripts/down.sh` |
+
+Comandos na mão (sem script): [docs/comandos-linux-wsl.md](docs/comandos-linux-wsl.md). Cenários de clique: [docs/cenarios-qa.md](docs/cenarios-qa.md).
+
+### 2) Quero estudar de verdade (do zero, com calma)
+
+Não comece pela tabela de portas. Comece pela academia:
+
+**→ [docs/academia-qa/README.md](docs/academia-qa/README.md)**
+
+São **12 semanas**, cerca de **8–10 horas por semana**. Cada sessão tem o próprio arquivo (meta, lab, leitura ou diagrama). Você implementa, vê com a mão, valida o fluxo, automatiza e só então evolui. O ritmo é lento de propósito: quem ainda não domina a stack não deveria ler um único markdown “nível 3” e achar que entendeu.
+
+Neste caminho, **este repositório é o oráculo** (a prova dos nove: o sistema pronto). O código que você escreve do zero fica numa pasta irmã, `studyshop-do-zero`, para não misturar com o lab.
+
+Como estudar sem se perder: [docs/academia-qa/como-estudar.md](docs/academia-qa/como-estudar.md).
+
+<p align="center">
+  <img src="docs/assets/hero-notebook-codigo.jpg" alt="Notebook com código em uma mesa de estudo" width="720" />
+</p>
+
+---
+
+## O que você está mexendo (em português)
+
+Imagine uma loja simples. O browser fala com uma **API única** (gateway). Por trás, vários serviços pequenos:
+
+| Peça | O que é | Por que existe no lab |
+|------|---------|------------------------|
+| **web** | Tela React | Onde o QA “usa o produto” |
+| **api-gateway** | Porta HTTP + login | Onde o Bruno/curl entram; esconde o gRPC |
+| **orders / inventory / payments / notifications** | Serviços Java | Cada um com seu papel e, em geral, seu banco |
+| **MongoDB** | Documentos | O dado depois que a API respondeu |
+| **Kafka** | Eventos (não é “fila Rabbit” aqui) | O pedido anda em etapas; você vê isso na Kafka UI |
+| **Jaeger / Prometheus / Grafana** | Trace, métrica, painel | Quando “funcionou” mas você quer saber *por onde* |
+| **Bruno + smoke + Playwright** | Teste manual e automático | Do clique ao script que não mente |
+
+Mapa e portas: [docs/arquitetura.md](docs/arquitetura.md). Palavras novas: [docs/glossario.md](docs/glossario.md).
+
+**Ferramentas para olhar por dentro** (depois que a stack subiu): Kafka UI http://localhost:11016 · Swagger http://localhost:11001/swagger-ui.html · Jaeger http://localhost:11011 · guia por ferramenta em [docs/academia-qa/ferramentas/](docs/academia-qa/ferramentas/).
+
+---
+
+## Info extra (vale saber antes de se assustar)
+
+- Coisas que parecem “bug” às vezes são **limitação didática** (ex.: estoque que não volta após falha de pagamento). Lista: [docs/academia-qa/riscos-conhecidos.md](docs/academia-qa/riscos-conhecidos.md).
+- A academia fala de **Quartz, webhook, DLQ** etc. Parte disso você **constrói** no projeto do zero; o oráculo nem sempre tem.
+- Segurança em três momentos (JWT → Keycloak → mTLS): [docs/seguranca.md](docs/seguranca.md).
+- Índice de tudo em docs: [docs/README.md](docs/README.md).
+- Fotos do topo: [docs/assets/CREDITOS.md](docs/assets/CREDITOS.md) (Unsplash).
+
+Se travar: leia o diagrama do lab, as pistas no fim do arquivo, a fonte oficial linkada — e anote o que tentou. Isso também é estudo.
+
+## O que tem no lab (stack)
 | Área | Tecnologia |
 |------|------------|
 | Backend | Java / Spring Boot |
@@ -19,9 +115,12 @@ Monorepo educacional para praticar **QA em arquitetura moderna**: Spring Boot, g
 | Observabilidade | OTel → Jaeger / Prometheus / Grafana |
 | API client | Bruno (`bruno/study-shop`) |
 
-## Documentação
+## Documentação (referência)
 
-- [Comandos Linux/WSL (aprender na prática)](docs/comandos-linux-wsl.md)
+Use depois de escolher a porta de entrada acima. A academia já aponta para a maioria destes arquivos na hora certa.
+
+- [Academia QA — 12 semanas](docs/academia-qa/README.md)
+- [Comandos Linux/WSL](docs/comandos-linux-wsl.md)
 - [Arquitetura](docs/arquitetura.md)
 - [Segurança (JWT + OIDC + mTLS)](docs/seguranca.md)
 - [Tutorial JWT local](docs/tutoriais/01-jwt-local.md)
@@ -89,6 +188,7 @@ Portas sequenciais a partir de **11000** (evita conflito com outros projetos loc
 | Notifications | 11007 |
 | MongoDB (host) | 11008 |
 | Kafka (host) | 11009 |
+| Kafka UI | http://localhost:11016 |
 | Keycloak | http://localhost:11015 (overlay OIDC) |
 | Grafana | http://localhost:11010 (`admin` / `admin`) |
 | Jaeger | http://localhost:11011 |
@@ -163,15 +263,6 @@ scripts/
   up.sh / down.sh / smoke.sh
   up.ps1 / down.ps1 / smoke.ps1
 ```
-
-## Fluxo de estudo sugerido
-
-1. Ler [comandos Linux/WSL](docs/comandos-linux-wsl.md) e subir o Compose.
-2. Abrir a web, fazer login e percorrer [cenários de QA](docs/cenarios-qa.md).
-3. Completar [tutorial JWT local](docs/tutoriais/01-jwt-local.md); depois OIDC e mTLS.
-4. Criar pedido e inspecionar traces no Jaeger.
-5. Repetir com `curl`/`./scripts/smoke.sh` e Bruno.
-6. Instalar o chart Helm em kind e repetir port-forward.
 
 ## Licença / uso
 

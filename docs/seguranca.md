@@ -44,3 +44,7 @@ Compose sobe no **Momento 1** (`STUDYSHOP_AUTH_MODE=local`).
 - Overlay mTLS: `infra/docker-compose.mtls.yml`
 
 Kafka/Mongo sem TLS permanece proposital (evolução futura).
+
+O `notifications-service` na porta **11007** não exige token. O gateway exige, na rota `/api/notifications`. Chamar o serviço direto é um risco do lab, não um atalho de produção.
+
+Academia (12 semanas, um arquivo por sessão): [academia-qa/README.md](academia-qa/README.md).

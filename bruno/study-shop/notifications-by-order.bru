@@ -1,0 +1,27 @@
+meta {
+  name: notifications by order
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/api/notifications/order/{{orderId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:11001
+}
+
+assert {
+  res.status: eq 200
+}

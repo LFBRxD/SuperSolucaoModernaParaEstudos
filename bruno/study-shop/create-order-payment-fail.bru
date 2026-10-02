@@ -1,0 +1,46 @@
+meta {
+  name: create order payment fail
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/api/orders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "customerEmail": "qa-fail@studyshop.local",
+    "forcePaymentFailure": true,
+    "items": [
+      {
+        "productId": "prod-mouse",
+        "quantity": 1
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:11001
+}
+
+script:post-response {
+  bru.setVar("failedOrderId", res.body.orderId);
+}
+
+assert {
+  res.status: eq 200
+  res.body.orderId: isNotEmpty
+}

@@ -116,7 +116,7 @@ Com `fullnameOverride`, os Services usam nomes estáveis:
 
 ## Observabilidade no cluster
 
-O chart **não** inclui OTel/Grafana/Prometheus. Para o lab completo de telemetria, use o Docker Compose em `infra/docker-compose.yml`.
+O chart **não** inclui OTel/Grafana/Prometheus nem CronJob. Para o lab completo de telemetria, use o Docker Compose em `infra/docker-compose.yml`. Agendamento de plataforma é estudo da semana 12 da academia, não um recurso já instalado por este chart.
 
 ## Segurança (lab)
 

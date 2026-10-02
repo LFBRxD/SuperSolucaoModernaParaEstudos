@@ -2,6 +2,10 @@
 
 Roteiro manual para validar o lab. Base URL do gateway: `http://localhost:11001`. Web: `http://localhost:11000`.
 
+Estudo longo, com uma meta por arquivo: [academia-qa/README.md](academia-qa/README.md). Matriz do que está automatizado: [academia-qa/matriz-rastreabilidade.md](academia-qa/matriz-rastreabilidade.md).
+
+`scripts/smoke.ps1` e `scripts/smoke.sh` cobrem health, 401, login, pedido até `CONFIRMED`, 403/200 de estoque, cancelamento por pagamento, cancelamento por estoque e notificação.
+
 ## Pré-condição
 
 - Stack no ar (`scripts/up.ps1` ou Compose em `infra/`).

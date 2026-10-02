@@ -36,6 +36,12 @@ vars:pre-request {
   baseUrl: http://localhost:11001
 }
 
+script:post-response {
+  bru.setVar("orderId", res.body.orderId);
+  bru.setVar("pollCount", "0");
+}
+
 assert {
   res.status: eq 200
+  res.body.orderId: isNotEmpty
 }

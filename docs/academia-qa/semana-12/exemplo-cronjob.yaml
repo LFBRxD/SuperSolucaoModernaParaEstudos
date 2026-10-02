@@ -1,0 +1,17 @@
+# Exemplo de estudo. Não aplica no cluster sozinho se você só ler o arquivo.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: studyshop-lab-date
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: date
+              image: busybox:1.36
+              command: ["date"]

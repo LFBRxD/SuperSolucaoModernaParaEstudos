@@ -13,6 +13,16 @@ No StudyShop: orders publica a criação do pedido; inventory, payments e notifi
 - **Consumer group:** conjunto de consumidores que dividem o processamento.
 - **KRaft:** modo do Kafka sem ZooKeeper (imagem oficial `apache/kafka` no Compose/Helm).
 
+## Agendamento
+
+O oráculo **não** tem scheduler. Pedido parado não expira sozinho.
+
+- **@Scheduled:** método que o Spring chama em intervalo, dentro de um processo só.
+- **Quartz:** Job (o trabalho), Trigger (quando) e JobStore (onde isso fica gravado). Serve para expirar pedido e tentar webhook de novo.
+- **CronJob:** o Kubernetes dispara um processo e ele termina. Não substitui um prazo de segundos dentro da saga.
+
+Estudo: `docs/academia-qa/semana-07/`.
+
 ## gRPC
 
 **gRPC** é um framework RPC sobre HTTP/2 com contratos **Protocol Buffers** (`.proto`). Ideal para comunicação interna tipada e de baixa latência.

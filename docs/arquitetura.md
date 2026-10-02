@@ -17,6 +17,22 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
 
 ## Diagrama lógico
 
+```mermaid
+flowchart LR
+  Web["web :11000"] --> Gw["api-gateway :11001"]
+  Gw --> Ord["orders gRPC"]
+  Gw --> Inv["inventory gRPC"]
+  Gw --> Notif["notifications HTTP"]
+  Ord --> Kafka[Kafka]
+  Inv --> Kafka
+  Kafka --> Pay[payments]
+  Kafka --> Notif
+```
+
+Leia da esquerda para a direita. O browser só fala com a web e, por ela, com o gateway.
+
+## Diagrama lógico (texto)
+
 ```
                     ┌─────────────┐
                     │    web      │
@@ -75,9 +91,9 @@ Tudo roda localmente via **Docker Compose** (lab completo) ou **Helm** em kind/m
 3. Orders persiste o pedido e publica evento **OrderCreated** no Kafka.
 4. Inventory reserva estoque; Payments processa (ou falha se `forcePaymentFailure`).
 5. Orders atualiza status a partir dos eventos da saga e publica mudança de status.
-6. Notifications grava mensagem; UI/API listam notificações e status do pedido.
+6. Notifications grava mensagem. A API lista; a UI atual não mostra notificações.
 
-Estados típicos: `PENDING` → `RESERVED` / `PAYMENT_*` → `COMPLETED` ou `FAILED` / `CANCELLED` (conforme implementação dos listeners).
+Estados reais: ver [status-pedido.md](status-pedido.md). Finais: `CONFIRMED` e `CANCELLED`. Não há `COMPLETED` nem `PENDING` neste código.
 
 ## Comunicação
 
@@ -122,6 +138,7 @@ Sequência a partir de **11000** no host:
 | prometheus | 11012 → 9090 |
 | otel collector | 11013 → 4317, 11014 → 4318 |
 | keycloak (overlay oidc) | 11015 → 8080 |
+| kafka-ui | 11016 → 8080 |
 
 Internamente (rede Docker/K8s): Mongo permanece em `27017`, Kafka em `9092`, OTel em `4317/4318`.
 
@@ -129,6 +146,9 @@ Internamente (rede Docker/K8s): Mongo permanece em `27017`, Kafka em `9092`, OTe
 
 - Mongo/Kafka single-node, sem TLS/auth (TLS de serviço coberto só no gRPC — Momento 3).
 - Sem API gateway de produção (Spring Cloud Gateway avançado, rate limit, etc.).
-- Pagamento simulado (flag de falha forçada para QA negativo).
+- Pagamento simulado (flag de falha forçada para QA negativo). Estoque reservado não volta nesse caso.
+- Não há scheduler. Pedido intermediário não expira sozinho. Job (Quartz) é estudo do projeto espelho, não deste oráculo.
+- Sem DLQ. Falha de listener fica no log.
+- Helm não sobe Jaeger/Prometheus/Grafana.
 - Charts Helm espelham o Compose de forma didática, não HA.
 - JWT local / OIDC / mTLS são perfis de estudo — ver [seguranca.md](seguranca.md).

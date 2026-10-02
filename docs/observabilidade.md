@@ -2,6 +2,8 @@
 
 Como usar Grafana, Jaeger e Prometheus no lab (Docker Compose em `infra/`).
 
+Trilha guiada: [academia-qa/semana-09/lab-01-jaeger.md](academia-qa/semana-09/lab-01-jaeger.md).
+
 ## URLs locais
 
 | Ferramenta | URL | Credenciais |
@@ -16,6 +18,16 @@ Subir a stack:
 ```powershell
 .\scripts\up.ps1
 ```
+
+```mermaid
+flowchart LR
+  Apps[servicos Spring] --> Collector[otel-collector]
+  Collector --> Jaeger[Jaeger :11011]
+  Collector --> Prom[Prometheus :11012]
+  Prom --> Grafana[Grafana :11010]
+```
+
+Leia da esquerda para a direita. O chart Helm não inclui este desenho; telemetria completa é no Compose.
 
 ## Fluxo de telemetria
 
